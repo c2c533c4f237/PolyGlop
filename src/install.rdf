@@ -4,7 +4,7 @@
     xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
     <Description about="urn:mozilla:install-manifest">
-        <em:id>jdeseno@polyglop.net</em:id>
+        <em:id>jdeseno@mozilla.org</em:id>
         <em:version>1.0</em:version>
         <em:type>2</em:type>
 
@@ -21,8 +21,8 @@
         <!-- Front End MetaData -->
         <em:name>polyglop</em:name>
         <em:description>Add random translations</em:description>
-        <em:creator>Your Name Here</em:creator>
-        <em:homepageURL>http://www.example.com/</em:homepageURL>
+        <em:creator>J DeSeno</em:creator>
+        <em:homepageURL>http://mozilla.org/</em:homepageURL>
     </Description>      
 </RDF>
 
