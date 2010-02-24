@@ -1,16 +1,32 @@
 PolyGlop = {
     "settings" : {
-        "min_word_length": 5,
-        "max_word_length": 30,
-        "word_limit": 3,
+        // prefs
+        "host_lang": null,
+        "conv_lang": null,
+        "min_word_length": null,
+        "max_word_length": null,
+        "word_limit": null,
+
+        // internal
         "en_word_rx": /^[a-zA-Z]+$/,
         "brands_rx": /^(JustinTV|Google|Mozilla|Firefox|Twitter|Facebook)$/i,
-        "referrer": "http://mozilla.org/",
-        "host_lang": "en",
-        "conv_lang": "ja"
+        "referrer": "http://mozilla.org/"
     },
     "on": false,
+    "loadSettings": function() {
+        var prefs = Components.classes["@mozilla.org/preferences-service;1"
+            ].getService(Components.interfaces.nsIPrefService).getBranch("extensions.polyglop.");
+        PolyGlop.settings.host_lang = prefs.getCharPref("host_lang");
+        PolyGlop.settings.conv_lang = prefs.getCharPref("conv_lang");
+        PolyGlop.settings.min_word_length = prefs.getIntPref("min_word_length");
+        PolyGlop.settings.max_word_length = prefs.getIntPref("max_word_length");
+        PolyGlop.settings.word_limit = prefs.getIntPref("word_limit");
+
+        PolyGlop.loadSettings = function() {};
+    },
     "onClickStatusIcon": function(e) {
+        PolyGlop.loadSettings();
+
         PolyGlop.on = !PolyGlop.on;
         if (PolyGlop.on) {
             document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_on.png";
