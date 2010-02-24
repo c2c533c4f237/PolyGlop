@@ -24,15 +24,35 @@ PolyGlop = {
 
         PolyGlop.loadSettings = function() {};
     },
-    "onClickStatusIcon": function(e) {
+    "turnOff": function() {
+        PolyGlop.on = false;
+        document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_off.png";
+    },
+    "turnOn": function() {
+        PolyGlop.on = true;
+        document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_on.png";
+    },
+    "run": function() {
+        PolyGlop.readDocument();
+    },
+    "init": function() {
         PolyGlop.loadSettings();
-
+        var appcontent = document.getElementById("appcontent");
+        appcontent.addEventListener("DOMContentLoaded", PolyGlop.onPageLoad, true);
+    },
+    "onPageLoad": function(e) {
+        var doc = e.originalTarget;
+        if (doc.nodeName === "#document" && PolyGlop.on) {
+            PolyGlop.run();
+        }
+    },
+    "onClickStatusIcon": function(e) {
         PolyGlop.on = !PolyGlop.on;
         if (PolyGlop.on) {
-            document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_on.png";
-            PolyGlop.readDocument();
+            PolyGlop.turnOn();
+            PolyGlop.run();
         } else {
-            document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_off.png";
+            PolyGlop.turnOff();
         }
     },
     "readDocument": function() {
