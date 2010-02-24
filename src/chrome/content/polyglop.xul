@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<overlay id="polyglop" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+    <script type="application/x-javascript" src="chrome://polyglop/content/polyglop.js"></script>
+    <statusbar id="status-bar">
+        <statusbarpanel id="polyglop-panel" label="Polyglop"
+            onclick="PolyGlop.onClickStatusIcon();">
+            <image id="polyglop-icon" src="chrome://polyglop/content/polyglop_icon_off.png" />
+        </statusbarpanel>
+    </statusbar>
+</overlay>
+
