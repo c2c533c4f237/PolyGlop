@@ -6,10 +6,13 @@
     </script>
     <statusbar id="status-bar">
         <statusbarpanel id="polyglop-panel" label="Polyglop">
-            <panel id="polyglop-menu">
+            <panel id="polyglop-menu" position="after_end">
                 <label value="PolyGlop Settings"/>
                 <command id="polyglop-toggle" oncommand="PolyGlop.toggle();"/>
                 <checkbox id="polyglop-on" label="Enable" checked="false" command="polyglop-toggle"/>
+                <label value="Words per page"/>
+                <textbox id="polyglop-words-per-page" 
+                    decimalplaces="0" max="30" min="1" size="2" type="number" onchange="PolyGlop.setWordsPerPage(this.value);"/>
                 <label value="Native Language"/>
                 <menulist id="polyglop-native-language" oncommand="PolyGlop.setNativeLanguage(this.value);">
                     <menupopup></menupopup>

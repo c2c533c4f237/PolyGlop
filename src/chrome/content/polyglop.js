@@ -41,6 +41,13 @@ PolyGlop = {
         PolyGlop.settings.conv_lang = lang_code;
         PolyGlop.prefs.setCharPref("host_lang", lang_code);
     },
+    "setWordsPerPage": function(count) {
+        count = parseInt(count);
+        if (count >= 1) {
+            PolyGlop.settings.word_limit = count;
+            PolyGlop.prefs.setIntPref("word_limit", count);
+        }
+    },
     "turnOff": function() {
         PolyGlop.on = false;
         document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_off.png";
@@ -58,6 +65,7 @@ PolyGlop = {
                 "DOMContentLoaded", PolyGlop.onPageLoad, true);
         PolyGlop.initLanguageSelect("polyglop-native-language", PolyGlop.settings.host_lang);
         PolyGlop.initLanguageSelect("polyglop-translate-language", PolyGlop.settings.conv_lang);
+        document.getElementById("polyglop-words-per-page").value = PolyGlop.settings.word_limit;
     },
     "initLanguageSelect": function(sel_id, selected_lang_code) {
         var sel = document.getElementById(sel_id);
