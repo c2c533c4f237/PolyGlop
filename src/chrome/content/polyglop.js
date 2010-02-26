@@ -1,28 +1,45 @@
 PolyGlop = {
-    "settings" : {
+    "languages": { 
+        'af':'AFRIKAANS', 'sq':'ALBANIAN', 'am':'AMHARIC', 'ar':'ARABIC', 'hy':'ARMENIAN', 'az':'AZERBAIJANI', 'eu':'BASQUE', 
+        'be':'BELARUSIAN', 'bn':'BENGALI', 'bh':'BIHARI', 'bg':'BULGARIAN', 'my':'BURMESE', 'ca':'CATALAN', 'chr':'CHEROKEE', 
+        'zh':'CHINESE', 'zh-CN':'CHINESE_SIMPLIFIED', 'zh-TW':'CHINESE_TRADITIONAL', 'hr':'CROATIAN', 'cs':'CZECH', 'da':'DANISH', 
+        'dv':'DHIVEHI',  'nl':'DUTCH',  'en':'ENGLISH', 'eo':'ESPERANTO', 'et':'ESTONIAN', 'tl':'FILIPINO', 'fi':'FINNISH', 
+        'fr':'FRENCH', 'gl':'GALICIAN', 'ka':'GEORGIAN', 'de':'GERMAN', 'el':'GREEK', 'gn':'GUARANI', 'gu':'GUJARATI', 
+        'iw':'HEBREW', 'hi':'HINDI', 'hu':'HUNGARIAN', 'is':'ICELANDIC', 'id':'INDONESIAN', 'iu':'INUKTITUT', 'ga':'IRISH', 
+        'it':'ITALIAN', 'ja':'JAPANESE', 'kn':'KANNADA', 'kk':'KAZAKH', 'km':'KHMER', 'ko':'KOREAN',  'ku':'KURDISH',  'ky':'KYRGYZ', 
+         'lo':'LAOTHIAN', 'lv':'LATVIAN', 'lt':'LITHUANIAN', 'mk':'MACEDONIAN', 'ms':'MALAY', 'ml':'MALAYALAM', 'mt':'MALTESE', 
+        'mr':'MARATHI', 'mn':'MONGOLIAN', 'ne':'NEPALI', 'no':'NORWEGIAN', 'or':'ORIYA', 'ps':'PASHTO', 'fa':'PERSIAN', 'pl':'POLISH', 
+        'pt-PT':'PORTUGUESE', 'pa':'PUNJABI', 'ro':'ROMANIAN', 'ru':'RUSSIAN', 'sa':'SANSKRIT', 'sr':'SERBIAN', 'sd':'SINDHI', 
+        'si':'SINHALESE', 'sk':'SLOVAK', 'sl':'SLOVENIAN', 'es':'SPANISH', 'sw':'SWAHILI', 'sv':'SWEDISH', 'tg':'TAJIK', 'ta':'TAMIL', 
+        'tl':'TAGALOG', 'te':'TELUGU', 'th':'THAI', 'bo':'TIBETAN', 'tr':'TURKISH', 'uk':'UKRAINIAN', 'ur':'URDU', 'uz':'UZBEK', 
+        'ug':'UIGHUR', 'vi':'VIETNAMESE', 'cy':'WELSH', 'yi':'YIDDISH'
+    },
+    "settings":{
         // prefs
         "host_lang": null,
         "conv_lang": null,
         "min_word_length": null,
         "max_word_length": null,
-        "word_limit": null,
-
-        // internal
-        "en_word_rx": /^[a-zA-Z]+$/,
-        "brands_rx": /^(JustinTV|Google|Mozilla|Firefox|Twitter|Facebook)$/i,
-        "referrer": "http://mozilla.org/"
+        "word_limit": null
     },
     "on": false,
+    "prefs": Components.classes["@mozilla.org/preferences-service;1"
+        ].getService(Components.interfaces.nsIPrefService).getBranch("extensions.polyglop."),
     "loadSettings": function() {
-        var prefs = Components.classes["@mozilla.org/preferences-service;1"
-            ].getService(Components.interfaces.nsIPrefService).getBranch("extensions.polyglop.");
-        PolyGlop.settings.host_lang = prefs.getCharPref("host_lang");
-        PolyGlop.settings.conv_lang = prefs.getCharPref("conv_lang");
-        PolyGlop.settings.min_word_length = prefs.getIntPref("min_word_length");
-        PolyGlop.settings.max_word_length = prefs.getIntPref("max_word_length");
-        PolyGlop.settings.word_limit = prefs.getIntPref("word_limit");
-
+        PolyGlop.settings.host_lang = PolyGlop.prefs.getCharPref("host_lang");
+        PolyGlop.settings.conv_lang = PolyGlop.prefs.getCharPref("conv_lang");
+        PolyGlop.settings.min_word_length = PolyGlop.prefs.getIntPref("min_word_length");
+        PolyGlop.settings.max_word_length = PolyGlop.prefs.getIntPref("max_word_length");
+        PolyGlop.settings.word_limit = PolyGlop.prefs.getIntPref("word_limit");
         PolyGlop.loadSettings = function() {};
+    },
+    "setNativeLanguage": function(lang_code) {
+        PolyGlop.settings.host_lang = lang_code;
+        PolyGlop.prefs.setCharPref("host_lang", lang_code);
+    },
+    "setTranslateLanguage": function(lang_code) {
+        PolyGlop.settings.conv_lang = lang_code;
+        PolyGlop.prefs.setCharPref("host_lang", lang_code);
     },
     "turnOff": function() {
         PolyGlop.on = false;
@@ -37,8 +54,20 @@ PolyGlop = {
     },
     "init": function() {
         PolyGlop.loadSettings();
-        var appcontent = document.getElementById("appcontent");
-        appcontent.addEventListener("DOMContentLoaded", PolyGlop.onPageLoad, true);
+        document.getElementById("appcontent").addEventListener(
+                "DOMContentLoaded", PolyGlop.onPageLoad, true);
+        PolyGlop.initLanguageSelect("polyglop-native-language", PolyGlop.settings.host_lang);
+        PolyGlop.initLanguageSelect("polyglop-translate-language", PolyGlop.settings.conv_lang);
+    },
+    "initLanguageSelect": function(sel_id, selected_lang_code) {
+        var sel = document.getElementById(sel_id);
+        for (var k in PolyGlop.languages) {
+            if (k !== selected_lang_code) {
+                sel.insertItemAt(0, PolyGlop.languages[k], k);
+            }
+        }
+        sel.insertItemAt(0, PolyGlop.languages[selected_lang_code], selected_lang_code);
+        sel.selectedIndex = 0;
     },
     "onPageLoad": function(e) {
         var doc = e.originalTarget;
@@ -46,7 +75,7 @@ PolyGlop = {
             PolyGlop.run();
         }
     },
-    "onClickStatusIcon": function(e) {
+    "toggle": function() {
         PolyGlop.on = !PolyGlop.on;
         if (PolyGlop.on) {
             PolyGlop.turnOn();
@@ -106,10 +135,10 @@ PolyGlop = {
                     word.length < PolyGlop.settings.max_word_length);
         },
         function(word) {
-            return PolyGlop.settings.en_word_rx.test(word);
+            return /^[a-zA-Z]+$/.test(word);
         },
         function(word) {
-            return !(PolyGlop.settings.brands_rx.test(word));
+            return !(/^(JustinTV|Google|Mozilla|Firefox|Twitter|Facebook)$/i.test(word));
         }
     ],
     "filterWords": function(text) {
@@ -140,7 +169,7 @@ PolyGlop = {
 
         var xhr = XMLHttpRequest();
         xhr.open("GET", uri, true);
-        xhr.setRequestHeader("referrer", PolyGlop.settings.referrer);
+        xhr.setRequestHeader("referrer", "https://addons.mozilla.org/en-US/firefox/addon/86091/");
         xhr.onreadystatechange = function() { 
             if (xhr.readyState === 4) { // COMPLETE
                 var jso = JSON.parse(xhr.responseText);

@@ -5,9 +5,22 @@
         window.addEventListener("load", PolyGlop.init, false);
     </script>
     <statusbar id="status-bar">
-        <statusbarpanel id="polyglop-panel" label="Polyglop"
-            onclick="PolyGlop.onClickStatusIcon();">
-            <image id="polyglop-icon" src="chrome://polyglop/content/polyglop_icon_off.png" />
+        <statusbarpanel id="polyglop-panel" label="Polyglop">
+            <panel id="polyglop-menu">
+                <label value="PolyGlop Settings"/>
+                <command id="polyglop-toggle" oncommand="PolyGlop.toggle();"/>
+                <checkbox id="polyglop-on" label="Enable" checked="false" command="polyglop-toggle"/>
+                <label value="Native Language"/>
+                <menulist id="polyglop-native-language" oncommand="PolyGlop.setNativeLanguage(this.value);">
+                    <menupopup></menupopup>
+                </menulist>
+                <label value="Translate Language"/>
+                <menulist id="polyglop-translate-language" oncommand="PolyGlop.setTranslateLanguage(this.value);">
+                    <menupopup></menupopup>
+                </menulist>
+            </panel>
+            <image id="polyglop-icon" popup="polyglop-menu"
+                src="chrome://polyglop/content/polyglop_icon_off.png" />
         </statusbarpanel>
     </statusbar>
 </overlay>
