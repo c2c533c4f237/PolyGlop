@@ -143,7 +143,7 @@ PolyGlop = {
                     word.length < PolyGlop.settings.max_word_length);
         },
         function(word) {
-            return /^[a-zA-Z]+$/.test(word);
+            return /^[^\d\s]+$/.test(word);
         },
         function(word) {
             return !(/^(JustinTV|Google|Mozilla|Firefox|Twitter|Facebook)$/i.test(word));
