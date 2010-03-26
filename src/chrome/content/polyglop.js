@@ -57,7 +57,10 @@ PolyGlop = {
         document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_on.png";
     },
     "run": function() {
-        setTimeout(PolyGlop.readDocument, 10);
+        Components.classes["@mozilla.org/timer;1"] .createInstance(
+            Components.interfaces.nsITimer).initWithCallback(
+                {"notify": function(timer) {PolyGlop.readDocument();}}, 
+                60, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
     },
     "init": function() {
         PolyGlop.loadSettings();
