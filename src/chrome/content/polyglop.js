@@ -57,7 +57,7 @@ PolyGlop = {
         document.getElementById("polyglop-icon").src = "chrome://polyglop/content/polyglop_icon_on.png";
     },
     "run": function() {
-        PolyGlop.readDocument();
+        setTimeout(PolyGlop.readDocument, 10);
     },
     "init": function() {
         PolyGlop.loadSettings();
